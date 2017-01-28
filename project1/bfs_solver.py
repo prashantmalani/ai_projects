@@ -35,7 +35,6 @@ class bfs_solver(solver):
 
             # Check if we are at the goal position
             if cur_node.board.vals == self.goal_state:
-                print "We have reached our goal state"
                 self.print_result_path(cur_node, len(frontier_set))
                 return
 

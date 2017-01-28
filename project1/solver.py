@@ -26,12 +26,13 @@ class solver:
         while cur_node.parent is not None:
             move_list.append(cur_node.move)
             cur_node = cur_node.parent
-        print "path to goal: " + str(move_list[::-1])
-        print "cost_of_path: " + str(len(move_list))
-        print "nodes_expanded: " + str(self.nodes_expanded)
-        print "fringe size: " + str(cur_fringe)
-        print "max_fringe_size:" + str(self.max_fringe)
-        print "search_depth:" + str(end_node.depth)
-        print "max_search_depth:" + str(self.max_depth)
-        print "running_time: " + str(123132)
-        print "max_ram_usage:" + str(2343242)
+        with open("output.txt", "w" ) as f:
+            f.write("path_to_goal: %s\n" % str(move_list[::-1]))
+            f.write("cost_of_path: %s\n" % str(len(move_list)))
+            f.write("nodes_expanded: %s\n" % str(self.nodes_expanded))
+            f.write("fringe_size: %s\n" % str(cur_fringe))
+            f.write("max_fringe_size: %s\n" % str(self.max_fringe))
+            f.write("search_depth: %s\n" % str(end_node.depth))
+            f.write("max_search_depth: %s\n" % str(self.max_depth))
+            f.write("running_time: %s\n" % str(123132))
+            f.write("max_ram_usage: %s\n" % str(2343242))

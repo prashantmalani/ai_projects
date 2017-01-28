@@ -12,8 +12,5 @@ if __name__ == "__main__":
     init_vals = board(init_list)
     # Create the root node
     start_node = node(None, init_vals, 0, None)
-    if algo == "bfs":
-        solver = bfs_solver(start_node, init_vals.dim)
-    elif algo == "dfs":
-        pass
+    solver = bfs_solver(start_node, init_vals.dim)
     solver.solve()
