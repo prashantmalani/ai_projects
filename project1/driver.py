@@ -55,7 +55,7 @@ class board:
         return board(temp_vals)
 
 
-class state:
+class node:
     """ Represents the equivalent of a node in the tree
         Attributes:
         parent :  Reference to the parent of the node
@@ -80,58 +80,61 @@ class solver:
         frontier = Queue.Queue(maxsize = 0)
 
         explored = set()
+
         # The explored / set should only hold board values, since we don't
         # care about the depth/parents/children etc.
+
+        # Initialize the frontier queue with the root node.
         frontier.put(self.root)
         frontier_set = set()
         frontier_set.add(tuple(self.root.board.vals))
         while not frontier.empty():
 
-            #Remove the node from queue
-            cur_state = frontier.get();
-            frontier_set.remove(tuple(cur_state.board.vals))
-            explored.add(tuple(cur_state.board.vals))
+            #Remove the node from queue, and to explored set
+            cur_node = frontier.get();
+            frontier_set.remove(tuple(cur_node.board.vals))
+            explored.add(tuple(cur_node.board.vals))
 
             # Update max depth bookeeping
-            if cur_state.depth > self.max_depth:
-                self.max_depth = cur_state.depth
+            if cur_node.depth > self.max_depth:
+                self.max_depth = cur_node.depth
 
             # Check if we are at the goal position
-            if cur_state.board.vals ==  self.goal_state:
+            if cur_node.board.vals ==  self.goal_state:
                 print "We have reached our goal state"
-                self.__print_result_path(cur_state, frontier.qsize())
+                self.__print_result_path(cur_node, len(frontier_set))
                 return
 
             # Expand in lexicographical order
             for cur_move in MOVES:
-                new_board = cur_state.board.move(cur_move)
+                new_board = cur_node.board.move(cur_move)
                 if (    new_board is not None
                     and tuple(new_board.vals) not in explored.union(frontier_set)):
-                    frontier.put(state(cur_state, new_board, cur_state.depth + 1,
+                    frontier.put(node(cur_node, new_board, cur_node.depth + 1,
                         cur_move))
                     frontier_set.add(tuple(new_board.vals))
                     # Update expanded node count
                     self.nodes_expanded += 1
 
             # Update max fringe values
-            cur_frontier = frontier.qsize()
+            cur_frontier = len(frontier_set)
             if cur_frontier > self.max_fringe:
                 self.max_fringe = cur_frontier
         print "Failure: Couldn't find a valid path"
         return
 
-    def __print_result_path(self, end_state, cur_fringe):
-        cur_state = end_state
+    def __print_result_path(self, end_node, cur_fringe):
+        cur_node = end_node
         move_list = []
-        while cur_state.parent is not None:
-            move_list.append(cur_state.move)
-            cur_state = cur_state.parent
+        while cur_node.parent is not None:
+            move_list.append(cur_node.move)
+            cur_node = cur_node.parent
         print "path to goal: " + str(move_list[::-1])
         print "cost_of_path: " + str(len(move_list))
         print "nodes_expanded: " + str(self.nodes_expanded)
         print "fringe size: " + str(cur_fringe)
         print "max_fringe_size:" + str(self.max_fringe)
-        print "search_depth:" + str(cur_state.depth)
+        print "search_depth:" + str(end_node.depth)
         print "max_search_depth:" + str(self.max_depth)
         print "running_time: " + str(123132)
         print "max_ram_usage:" + str(2343242)
@@ -142,6 +145,6 @@ if __name__ == "__main__":
     print root.vals
     new_board = root.move("Right")
     # Create the root node
-    start_node = state(None, root, 0, None)
+    start_node = node(None, root, 0, None)
     bfs_solver = solver(start_node, root.dim)
     bfs_solver.solve_bfs()
