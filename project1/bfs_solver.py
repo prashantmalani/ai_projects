@@ -11,6 +11,7 @@ class bfs_solver(solver):
 
     def solve(self):
         frontier = Queue.Queue(maxsize = 0)
+        frontier_set = set()
 
         explored = set()
 
@@ -20,7 +21,6 @@ class bfs_solver(solver):
         # We keep a set alongside the queue, since it's difficult to check whether
         # an element is present in the queue or not.
         frontier.put(self.root)
-        frontier_set = set()
         frontier_set.add(tuple(self.root.board.vals))
 
         while not frontier.empty():
@@ -51,11 +51,18 @@ class bfs_solver(solver):
                     # Update expanded node count
                     been_expanded = True
 
-            # Update max fringe values, and nodes_expanded counts
+            # Update max fringe values, and nodes_expanded counts, max search depth
+            # The example suggests that even if a node hasn't been explored,
+            # as long as it is in the frontier set, it contributes to the depth
+            # calculation.
             cur_frontier = len(frontier_set)
             if cur_frontier > self.max_fringe:
                 self.max_fringe = cur_frontier
             if been_expanded is True:
                 self.nodes_expanded += 1
+                # Update max depth bookeeping
+                if cur_node.depth + 1 > self.max_depth:
+                    self.max_depth = cur_node.depth + 1
+
         print "Failure: Couldn't find a valid path"
         return
