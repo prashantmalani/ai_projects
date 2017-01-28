@@ -1,6 +1,7 @@
 # Class implementation of BFS solver for P1
 from solver import solver
 from node import node
+import time
 
 class dfs_solver(solver):
     """ Represents specific implementation of the solver, for DFS
@@ -9,6 +10,7 @@ class dfs_solver(solver):
         solver.__init__(self, root_node, dimension)
 
     def solve(self):
+        start_time = time.time()
         frontier = []
         frontier_set = set()
 
@@ -30,7 +32,9 @@ class dfs_solver(solver):
 
             # Check if we are at the goal position
             if cur_node.board.vals == self.goal_state:
-                self.print_result_path(cur_node, len(frontier_set))
+                end_time = time.time()
+                self.print_result_path(cur_node, len(frontier_set),
+                    end_time - start_time)
                 return
 
             been_expanded = False
@@ -55,7 +59,7 @@ class dfs_solver(solver):
             cur_frontier = len(frontier_set)
             if cur_frontier > self.max_fringe:
                 self.max_fringe = cur_frontier
-            self.nodes_expanded += 1                
+            self.nodes_expanded += 1
             if been_expanded is True:
                 # Update max depth bookeeping
                 if cur_node.depth + 1 > self.max_depth:

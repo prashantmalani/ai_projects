@@ -18,7 +18,7 @@ class solver:
         self.max_fringe = 0
         self.max_depth = 0
 
-    def print_result_path(self, end_node, cur_fringe):
+    def print_result_path(self, end_node, cur_fringe, time):
         """ Helper function to print stats in the desired format.
         """
         cur_node = end_node
@@ -34,5 +34,5 @@ class solver:
             f.write("max_fringe_size: %s\n" % str(self.max_fringe))
             f.write("search_depth: %s\n" % str(end_node.depth))
             f.write("max_search_depth: %s\n" % str(self.max_depth))
-            f.write("running_time: %s\n" % str(123132))
+            f.write("running_time: %s\n" % str(time))
             f.write("max_ram_usage: %s\n" % str(2343242))

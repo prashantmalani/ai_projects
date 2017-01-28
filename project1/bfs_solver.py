@@ -2,6 +2,7 @@
 import Queue
 from solver import solver
 from node import node
+import time
 
 class bfs_solver(solver):
     """ Represents specific implementation of the solver, for BFS
@@ -10,6 +11,7 @@ class bfs_solver(solver):
         solver.__init__(self, root_node, dimension)
 
     def solve(self):
+        start_time = time.time()
         frontier = Queue.Queue(maxsize = 0)
         frontier_set = set()
 
@@ -31,7 +33,9 @@ class bfs_solver(solver):
 
             # Check if we are at the goal position
             if cur_node.board.vals == self.goal_state:
-                self.print_result_path(cur_node, len(frontier_set))
+                end_time = time.time()
+                self.print_result_path(cur_node, len(frontier_set),
+                    end_time - start_time)
                 return
 
             been_expanded = False
