@@ -1,31 +1,30 @@
 # Class implementation of BFS solver for P1
-import Queue
 from solver import solver
 from node import node
 
-class bfs_solver(solver):
-    """ Represents specific implementation of the solver, for BFS
+class dfs_solver(solver):
+    """ Represents specific implementation of the solver, for DFS
     """
     def __init__(self, root_node, dimension):
         solver.__init__(self, root_node, dimension)
 
     def solve(self):
-        frontier = Queue.Queue(maxsize = 0)
+        frontier = []
         frontier_set = set()
 
         explored = set()
 
         # The explored / set should only hold board values, since we don't
         # care about the depth/parents/children etc.
-        # Initialize the frontier queue with the root node.
-        # We keep a set alongside the queue, since it's difficult to check whether
-        # an element is present in the queue or not.
-        frontier.put(self.root)
+        # Initialize the frontier stack with the root node.
+        # We keep a set alongside the stack, since it's difficult to check whether
+        # an element is present in the stack or not.
+        frontier.append(self.root)
         frontier_set.add(tuple(self.root.board.vals))
 
-        while not frontier.empty():
-            #Remove the node from queue, and to explored set
-            cur_node = frontier.get();
+        while len(frontier) != 0:
+            #Remove the node from stack, and to explored set
+            cur_node = frontier.pop();
             frontier_set.remove(tuple(cur_node.board.vals))
             explored.add(tuple(cur_node.board.vals))
 
@@ -35,15 +34,15 @@ class bfs_solver(solver):
                 return
 
             been_expanded = False
-            # Expand in lexicographical order
-            for cur_move in self.MOVES:
+            # Expand in reverse lexicographical order
+            for cur_move in self.MOVES[::-1]:
                 new_board = cur_node.board.move(cur_move)
                 if new_board is None:
                     continue
                 new_board_tuple = tuple(new_board.vals)
                 if (    new_board_tuple not in explored
                     and new_board_tuple not in frontier_set):
-                    frontier.put(node(cur_node, new_board, cur_node.depth + 1,
+                    frontier.append(node(cur_node, new_board, cur_node.depth + 1,
                         cur_move))
                     frontier_set.add(tuple(new_board.vals))
                     # Update expanded node count
@@ -56,7 +55,7 @@ class bfs_solver(solver):
             cur_frontier = len(frontier_set)
             if cur_frontier > self.max_fringe:
                 self.max_fringe = cur_frontier
-            self.nodes_expanded += 1
+            self.nodes_expanded += 1                
             if been_expanded is True:
                 # Update max depth bookeeping
                 if cur_node.depth + 1 > self.max_depth:

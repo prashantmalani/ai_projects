@@ -1,6 +1,7 @@
 from board import board
 from node import node
 from bfs_solver import bfs_solver
+from dfs_solver import dfs_solver
 import Queue
 import sys
 
@@ -12,5 +13,8 @@ if __name__ == "__main__":
     init_vals = board(init_list)
     # Create the root node
     start_node = node(None, init_vals, 0, None)
-    solver = bfs_solver(start_node, init_vals.dim)
+    if algo == 'bfs':
+        solver = bfs_solver(start_node, init_vals.dim)
+    else:
+        solver = dfs_solver(start_node, init_vals.dim)
     solver.solve()
