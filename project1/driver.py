@@ -3,6 +3,7 @@ from node import node
 from bfs_solver import bfs_solver
 from dfs_solver import dfs_solver
 from astar_solver import astar_solver
+from ida_solver import ida_solver
 import Queue
 import sys
 
@@ -18,6 +19,8 @@ if __name__ == "__main__":
         solver = bfs_solver(start_node, init_vals.dim)
     elif algo == "ast":
         solver = astar_solver(start_node, init_vals.dim)
+    elif algo == "ida":
+        solver = ida_solver(start_node, init_vals.dim)
     else:
         solver = dfs_solver(start_node, init_vals.dim)
     solver.solve()
