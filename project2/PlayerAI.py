@@ -24,16 +24,18 @@ class PlayerAI(BaseAI):
         """ Evaluation function of the current grid.
         """
         # Each heuristic is scored on 100, and we give each one weights.
-        w1 = 50 # 50 percent weightage to max tile in corner
-        w2 = 50 # 50 percent weightage to number of free spaces
+        w1 = 40 # 50 percent weightage to max tile in corner
+        w2 = 40 # 50 percent weightage to number of free spaces
         w3 = -30 # penalty weightage if there are any non-monotonic rows/columns
+        w4 = 20 # 20 percent weightage to having merge pairs
 
         # h2 : Number of free tiles: Normalize against max free Tiles
 
         h1 = heuristics.h1(grid)
         h2 = heuristics.h2(grid)
         h3 = heuristics.h3(grid)
-        score = (h1*w1 + h2*w2 + h3*w3) / (w1 + w2 + w3)
+        h4 = heuristics.h4(grid)
+        score = ((h1*w1) + (h2*w2) + (h3*w3) + (h4*w4)) / (w1 + w2 + w3 + w4)
         return score
 
 

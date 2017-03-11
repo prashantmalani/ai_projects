@@ -79,8 +79,108 @@ def h3(grid):
     h3 = (non_monot * 100) / 8
     return h3
 
+# Mergeability: If adjacent tiles are mergeable, it counts towards a positive score
+# Normalized to a 100 (out of the total number of mergeable pairs)
+# Note that we don't count 0s
+# Hanging values (i.e 8,0,0,0) counts towards an umergeable pair
+def h4(grid):
+    total_pairs = 0
+    merge_pairs = 0
+
+    # First check the rows
+    i = 0
+    while  i < grid.size:
+        j = 0
+        while j < grid.size:
+            if j == 0:
+                cur_val = grid.map[i][j]
+                j += 1
+                continue
+            new_val = grid.map[i][j]
+            if new_val == 0:
+                j += 1
+                continue
+            else:
+                if cur_val != 0:
+                    if cur_val == new_val:
+                        # Matching pair
+                        total_pairs += 1
+                        merge_pairs += 1
+                        j += 1
+                        continue
+                    else:
+                        # Non-matching pair
+                        total_pairs += 1
+                        j += 1
+                        if j >= grid.size:
+                            continue
+                        cur_val = new_val
+
+                        continue
+                else:
+                    cur_val = new_val
+                    j += 1
+                    continue
+        # We've reached the end. If the cur_val is 0 means it's all 0's
+        # If the cur_val is non-zero, then it's a hanging number
+        if cur_val == 0 and new_val !=0:
+            total_pairs += 1
+        if cur_val !=0 and new_val == 0:
+            total_pairs += 1
+        i += 1
+
+    # First check the rows
+    i = 0
+    while  i < grid.size:
+        j = 0
+        while j < grid.size:
+            if j == 0:
+                cur_val = grid.map[j][i]
+                j += 1
+                continue
+            new_val = grid.map[j][i]
+            if new_val == 0:
+                j += 1
+                continue
+            else:
+                if cur_val != 0:
+                    if cur_val == new_val:
+                        # Matching pair
+                        total_pairs += 1
+                        merge_pairs += 1
+                        j += 1
+                        continue
+                    else:
+                        # Non-matching pair
+                        total_pairs += 1
+                        j += 1
+                        if j >= grid.size:
+                            continue
+                        cur_val = new_val
+
+                        continue
+                else:
+                    cur_val = new_val
+                    j += 1
+                    continue
+        # We've reached the end. If the cur_val is 0 means it's all 0's
+        # If the cur_val is non-zero, then it's a hanging number
+        if cur_val == 0 and new_val !=0:
+            total_pairs += 1
+        if cur_val !=0 and new_val == 0:
+            total_pairs += 1
+        i += 1
+
+    h4 = (merge_pairs * 100) / total_pairs
+    return h4
+
+
 if __name__ == "__main__":
     sampleGrid = Grid(4);
+    print "Testing h4 - 1"
+    sampleGrid.map = [[512,256,16,2],[64,32,8,4],[0,32,2,4],[0,8,0,8]]
+    h4_1 = h4(sampleGrid)
+    assert(h4_1 == 15)
     sampleGrid.map = [[2,4,6,8],[4,6,8,10],[4,6,6,4],[2,4,4,10]]
     print "Testing h3"
     h3 = h3(sampleGrid)
