@@ -3,6 +3,7 @@ from BaseAI import BaseAI
 import sys
 import itertools
 import time
+import heuristics
 
 class PlayerAI(BaseAI):
 
@@ -27,75 +28,11 @@ class PlayerAI(BaseAI):
         w2 = 50 # 50 percent weightage to number of free spaces
         w3 = -30 # penalty weightage if there are any non-monotonic rows/columns
 
-        max_val = grid.getMaxTile()
-        #  print "Max tile value is:" + str(max_val)
-
-        # h1 : Position of max tile: Corners scored highest, mid scored lowest
-        locs = [(x,y) for (x,y) in itertools.product(range(4), range(4)) if grid.map[x][y] == max_val]
-        # Pic any max val tile, in case there are many
-
-        one_max_loc = locs[0]
-        score = 4
-        if (one_max_loc[0] % (grid.size - 1) > 0) :
-            score /= 2
-        if (one_max_loc[1] % (grid.size - 1) > 0) :
-            score /= 2
-        h1 = (score * 25 )# normalize to 100 ; h1 = (score * 100) / 4
-
         # h2 : Number of free tiles: Normalize against max free Tiles
-        num_free_tiles = len(grid.getAvailableCells())
-        h2 = (num_free_tiles * 100) / 16
 
-        # calculate number of non-monotonic rows / columns out of 8.
-        # First check the rows
-        non_monot = 0;
-        for i in range(4):
-            old_diff = 0
-            new_diff = 0
-            for j in range(1,4):
-                new_diff = grid.map[i][j] - grid.map[i][j-1]
-                # If there is no change, continue looking at the next value
-                if new_diff == 0:
-                    continue
-
-                if new_diff > 0:
-                    new_diff = 1
-                else:
-                    new_diff = -1
-
-                # The logic here is as follows
-                # old_diff tracks the current trend; if it is +ve, we've seen at
-                # least one increase in value. if it is -ve, we've seen at least
-                # one decrease.
-                # so as long as old_diff * new_diff is >= 0 , this means there
-                # hasn't been any sign inversion.
-                if (new_diff * old_diff) < 0:
-                    non_monot += 1
-                    break
-                if new_diff != 0 and old_diff == 0:
-                    old_diff = new_diff
-
-        for i in range(4):
-            old_diff = 0
-            new_diff = 0
-            for j in range(1,4):
-                new_diff = grid.map[j][i] - grid.map[j-1][i]
-                # If there is no change, continue looking at the next value
-                if new_diff == 0:
-                    continue
-                if new_diff > 0:
-                    new_diff = 1
-                else:
-                    new_diff = -1
-
-                if (new_diff * old_diff) < 0:
-                    non_monot += 1
-                    break
-                if new_diff != 0 and old_diff == 0:
-                    old_diff = new_diff
-
-        h3 = (non_monot * 100) / 8
-
+        h1 = heuristics.h1(grid)
+        h2 = heuristics.h2(grid)
+        h3 = heuristics.h3(grid)
         score = (h1*w1 + h2*w2 + h3*w3) / (w1 + w2 + w3)
         return score
 
