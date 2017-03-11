@@ -7,7 +7,7 @@ import heuristics
 
 class PlayerAI(BaseAI):
 
-    MAX_DEPTH = 5
+    MAX_DEPTH = 6
 
     def getMove(self, grid):
         #moves = grid.getAvailableMoves()
@@ -24,9 +24,9 @@ class PlayerAI(BaseAI):
         """ Evaluation function of the current grid.
         """
         # Each heuristic is scored on 100, and we give each one weights.
-        w1 = 40 # 50 percent weightage to max tile in corner
-        w2 = 40 # 50 percent weightage to number of free spaces
-        w3 = -30 # penalty weightage if there are any non-monotonic rows/columns
+        w1 = 20 # 50 percent weightage to max tile in corner
+        w2 = 60 # 50 percent weightage to number of free spaces
+        w3 = -20 # penalty weightage if there are any non-monotonic rows/columns
         w4 = 20 # 20 percent weightage to having merge pairs
 
         # h2 : Number of free tiles: Normalize against max free Tiles
@@ -90,7 +90,7 @@ class PlayerAI(BaseAI):
         possible_cells = self.generateSpawnLocations(grid)
 
 
-        move_val_pairs = itertools.product(possible_cells,(2,4))
+        move_val_pairs = itertools.product(possible_cells,(2,))
         # Shall we assume that 2's are always drawn ?
         # Is that better adversarial wise?
         for cur_location,cur_val in move_val_pairs:
