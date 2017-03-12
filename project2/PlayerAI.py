@@ -7,7 +7,7 @@ import heuristics
 
 class PlayerAI(BaseAI):
 
-    MAX_DEPTH = 6
+    MAX_DEPTH = 5
 
     def getMove(self, grid):
         #moves = grid.getAvailableMoves()
@@ -24,10 +24,10 @@ class PlayerAI(BaseAI):
         """ Evaluation function of the current grid.
         """
         # Each heuristic is scored on 100, and we give each one weights.
-        w1 = 20 # 50 percent weightage to max tile in corner
-        w2 = 60 # 50 percent weightage to number of free spaces
-        w3 = -20 # penalty weightage if there are any non-monotonic rows/columns
-        w4 = 20 # 20 percent weightage to having merge pairs
+        w1 = 40 # 50 percent weightage to max tile in corner
+        w2 = 50 + 20# 50 percent weightage to number of free spaces
+        w3 = -60 # penalty weightage if there are any non-monotonic rows/columns
+        w4 = 10 # 20 percent weightage to having merge pairs
 
         # h2 : Number of free tiles: Normalize against max free Tiles
 
@@ -35,7 +35,7 @@ class PlayerAI(BaseAI):
         h2 = heuristics.h2(grid)
         h3 = heuristics.h3(grid)
         h4 = heuristics.h4(grid)
-        score = ((h1*w1) + (h2*w2) + (h3*w3) + (h4*w4)) / (w1 + w2 + w3 + w4)
+        score = ((h1*w1) + (h2*w2) + (h3*w3) + (h4*w4)) / (w1 + w2 + w3 + w4 - 20)
         return score
 
 

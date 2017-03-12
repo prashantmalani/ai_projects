@@ -17,13 +17,13 @@ def h1(grid):
         score /= 2
     if (one_max_loc[1] % (grid.size - 1) > 0) :
         score /= 2
-    h1 = (score * 25 )# normalize to 100 ; h1 = (score * 100) / 4
+    h1 = (score * 250 )# normalize to 100 ; h1 = (score * 1000) / 4
     return h1
 
 # % of free tiles
 def h2(grid):
     num_free_tiles = len(grid.getAvailableCells())
-    h2 = (num_free_tiles * 100) / 16
+    h2 = (num_free_tiles * 62)
     return h2
 
 # % of NON-monotonic rows/columns
@@ -76,7 +76,7 @@ def h3(grid):
             if new_diff != 0 and old_diff == 0:
                 old_diff = new_diff
 
-    h3 = (non_monot * 100) / 8
+    h3 = (non_monot * 125)
     return h3
 
 # Mergeability: If adjacent tiles are mergeable, it counts towards a positive score
@@ -171,7 +171,7 @@ def h4(grid):
             total_pairs += 1
         i += 1
 
-    h4 = (merge_pairs * 100) / total_pairs
+    h4 = (merge_pairs * 1000) / total_pairs
     return h4
 
 
