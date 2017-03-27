@@ -1,54 +1,41 @@
 from driver import csp
+import converter
+import math
 
-def revise(csp, xi, xj):
-    # Perform revision step of AC-3 algorithm
-    revised = False
-    for x in csp.D[xi]:
-        d_xj = csp.D[xj][:]
-        if x in d_xj:
-            d_xj.remove(x)
-        # If there is no value of xj in Dj such that x != xj, then remove x from Di
-        if len(d_xj) == 0:
-            csp.D[xi].remove(x)
-            revised = True
-    return revised
+def get_square_neighbors(key, size):
+    row = int(key[0])
+    col = int(key[1])
 
-def find_neighbors(xi, size):
-    # Find all neighbours of i
-    cur_row = int(xi[0])
-    cur_col = int(xi[1])
-    row_min = cur_row - 1
-    if row_min <= 1:
-        row_min = 1
-    row_max = cur_row + 1
-    if row_max > size:
-        row_max = size
+    neighbors  = []
+    sq_rt = int(math.sqrt(size))
+    # The row limit calculations work better with base 0 indexing.
+    row = row - 1
+    col = col - 1
+    min_row = row - (row % sq_rt)
+    min_col = col - (col % sq_rt)
+    for x in range(min_row, min_row + sq_rt):
+        for y in range(min_col, min_col + sq_rt):
+            neighbors.append(str(x + 1) + str(y + 1))
 
-    col_min = cur_col - 1
-    if col_min <= 1:
-        col_min = 1
-    col_max = cur_col + 1
-    if col_max > size:
-        col_max = size
-
-    neighbors = []
-    for x in range(row_min, row_max + 1):
-        for y in range(col_min, col_max +1):
-            neighbors.append(str(x) + str(y))
-
-    neighbors.remove(xi)
     return neighbors
 
+def get_neighbors(key, size):
+    row = key[0]
+    col = key[1]
+    neighbors = []
+    # Add all other elements in row_size
+    for i in range(1, size + 1):
+        if i != int(col):
+            neighbors.append(row + str(i))
+    # Add all other elements in the column.
+    for cur_row in converter.ROW_ARR[:size]:
+        if cur_row != row:
+            neighbors.append(cur_row + col)
 
-def ac3(csp, size):
-    while len(csp.arcs) > 0:
-        (xi, xj) = csp.arcs.pop(0)
-        if revise(csp, xi, xj) is True:
-            if len(csp.D[xi]) == 0:
-                return False
-            neighbors = find_neighbors(xi, size)
-            if xj in neighbors:
-                neighbors.remove(xj)
-            for xk in neighbors:
-                 csp.arcs.append((xk,xi))
-    return True
+    # Add square specific constraints (if they don't already exist).
+    neighbors_square = get_square_neighbors(key, size)
+    neighbors_square.remove(key)
+    for x in neighbors_square:
+        neighbors.append(x)
+
+    return neighbors
