@@ -1,3 +1,4 @@
+# Tiny helper routine to convert Sudoku input string into a dict.
 
 ROW_ARR = ['1','2','3', '4', '5', '6', '7', '8', '9', 'J', 'K']
 
@@ -20,6 +21,6 @@ def convert(inputstr, row_size):
     return lookup
 
 if __name__ == "__main__":
-    # Some test code
+    # Some test code.
     result = convert("12344321", 4)
     print result

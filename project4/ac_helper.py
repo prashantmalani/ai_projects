@@ -1,3 +1,7 @@
+# Helper functions for the AC-3 algorithm.
+# Sorry, but I'm too lazy to comment these. But what each function is doing
+# should be self-evident.
+
 from driver import csp
 import converter
 import math
