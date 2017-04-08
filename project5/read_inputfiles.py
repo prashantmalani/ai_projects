@@ -19,19 +19,18 @@ def readFiles(inputdir):
         data = f.read()
         stopwords = data.split()
 
-    print stopwords
+    # Read files one by one.
     for f in files:
-        with open(join(inputdir, f), 'r') as f_handle:
-            data = f_handle.readlines()[0]
-            text_list.append(data)
-            print "Raw data is:"
-            print data
-            print "Sanitized data is:"
-            data = sanitizeData_(data, stopwords)
-            print data
-            raw_input('...')
-
+        file_str = readFile_(join(inputdir, f), stopwords)
+        text_list.append(file_str)
     return text_list
+
+def readFile_(inputpath, stopwords):
+    data = ""
+    with open(inputpath, 'r') as f_handle:
+        data = f_handle.readlines()[0]
+        data = sanitizeData_(data, stopwords)
+    return data
 
 def sanitizeData_(data_str, stopwords):
     """ Internal function to sanitize the input data.
@@ -39,4 +38,13 @@ def sanitizeData_(data_str, stopwords):
     out = data_str.translate(string.maketrans(string.punctuation, OUTTAB))
     out = out.lower()
     out = ' '.join([word for word in out.split() if word not in stopwords])
+    out = out.decode('unicode_escape').encode('ascii','ignore')
     return out
+
+def sanitizeString(data_str):
+    # Sanitization is performed in place
+    stopwords = []
+    with open('stopwords.en.txt', 'r') as f:
+        data = f.read()
+        stopwords = data.split()
+    return sanitizeData_(data_str, stopwords)
